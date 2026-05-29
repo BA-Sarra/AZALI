@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
-import XLSX from 'xlsx';
 import { prisma } from '@/lib/prisma';
+import * as XLSX from 'xlsx';
 
 export async function GET() {
   const orders = await prisma.order.findMany({ orderBy: { createdAt: 'desc' }, include: { customer: true, address: true, items: { include: { customizations: true } } } });
