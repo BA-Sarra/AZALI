@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  background: #F2E8D6;
+  color: #271509;
+}
+
+html { scroll-behavior: smooth; }
+body { margin: 0; background: #F2E8D6; color: #271509; }
+* { box-sizing: border-box; }
+::selection { background: #871A3B; color: #F2E8D6; }
+
+.prose-azali p { margin-bottom: 1rem; line-height: 1.75; }
+.prose-azali h2 { font-family: var(--font-display), Georgia, 'Times New Roman', serif; font-size: 1.875rem; margin: 2rem 0 1rem; color: #271509; }
+.prose-azali ul { margin: 1rem 0 1.5rem 1.25rem; list-style: disc; line-height: 1.75; }
+.prose-azali strong { color: #271509; }
+
+.input { @apply w-full rounded border border-sand/70 bg-parchment/70 px-3.5 py-2.5 text-sm text-umber outline-none transition focus:border-garnet focus:ring-1 focus:ring-garnet/15; }
+.textarea-azali { @apply w-full min-h-24 resize-y rounded border border-sand/70 bg-parchment/70 px-3.5 py-2.5 text-sm leading-7 text-umber outline-none transition placeholder:text-umber/35 focus:border-garnet focus:ring-1 focus:ring-garnet/15; }
+.select-azali { @apply w-full appearance-none rounded border border-sand/70 bg-parchment/75 px-3.5 py-2.5 pr-10 font-display text-sm text-umber outline-none transition focus:border-garnet focus:ring-1 focus:ring-garnet/15; background-image: linear-gradient(45deg, transparent 50%, #871A3B 50%), linear-gradient(135deg, #871A3B 50%, transparent 50%); background-position: calc(100% - 18px) calc(50% - 3px), calc(100% - 13px) calc(50% - 3px); background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; }
+.checkbox-azali { @apply h-4 w-4 appearance-none rounded-sm border border-sand bg-parchment align-middle transition checked:border-garnet checked:bg-garnet focus:outline-none focus:ring-1 focus:ring-garnet/20; }
+.label { @apply mb-2 block text-[0.68rem] font-semibold uppercase tracking-[0.22em] text-azaliIndigo; }
+.btn-primary { @apply rounded border border-garnet bg-garnet px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.19em] text-parchment shadow-none transition hover:border-umber hover:bg-umber disabled:cursor-not-allowed disabled:opacity-60; }
+.btn-secondary { @apply rounded border border-azaliIndigo/45 bg-transparent px-5 py-2.5 text-[0.72rem] font-semibold uppercase tracking-[0.19em] text-azaliIndigo shadow-none transition hover:border-garnet hover:bg-garnet/5 hover:text-garnet; }
+.card { @apply rounded-md border border-sand/70 bg-white/50 shadow-none transition-colors hover:border-garnet/20; }
+.nav-link { position: relative; transition: color 180ms ease; }
+.nav-link:hover { color: #871A3B; }
+.nav-link::after { content: ''; position: absolute; left: 0; bottom: -0.375rem; height: 1px; width: 0; background: #2C1268; transition: width 300ms ease; }
+.nav-link:hover::after, .nav-link-active::after { width: 100%; }
+.nav-link-active { color: #871A3B; }
+
+.hover-card-garnet { @apply rounded-md border border-sand/70 bg-white/50 shadow-none transition duration-300; }
+.hover-card-garnet:hover { border-color: rgba(135, 26, 59, 0.28) !important; background: rgba(255,255,255,0.72); box-shadow: 0 14px 34px rgba(39, 21, 9, 0.08); transform: translateY(-3px); }
+.hover-card-garnet:hover .card-hover-title { color: #871A3B !important; }
+.hover-card-garnet:hover .card-hover-muted { color: rgba(39, 21, 9, 0.8) !important; }
+.hover-card-garnet:hover .card-hover-price { color: #871A3B !important; }
+.hover-card-garnet:hover .card-hover-image { filter: saturate(1.04) contrast(1.02); }
+.origin-label { @apply text-[0.64rem] font-semibold uppercase tracking-[0.23em] text-azaliIndigo; }
+.accent-label { @apply text-[0.64rem] font-semibold uppercase tracking-[0.23em] text-azaliIndigo; }
+.status-label-garnet { @apply text-[0.64rem] font-semibold uppercase tracking-[0.23em] text-garnet; }
+
+.page-wrap { @apply mx-auto max-w-[1080px] px-6 md:px-10; }
+.page-pad { @apply py-20 md:py-24; }
+.product-grid { @apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3; }
+.category-grid { @apply grid gap-6 sm:grid-cols-2 lg:grid-cols-3; }
+.alt-section { background: #F8F6F2; }
+
+.custom-summary { list-style: none; }
+.custom-summary::-webkit-details-marker { display: none; }
+
+.marquee { display: inline-flex; gap: 2rem; min-width: max-content; animation: azali-marquee 28s linear infinite; }
+@keyframes azali-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }

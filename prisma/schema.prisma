@@ -1,0 +1,354 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum AvailabilityType {
+  IN_STOCK
+  MADE_TO_ORDER
+  BOTH
+}
+
+enum OrderStatus {
+  PENDING_CONFIRMATION
+  CONFIRMED
+  IN_PRODUCTION
+  READY_TO_SHIP
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum SectionType {
+  HERO_VIDEO
+  CATEGORY_GRID
+  FEATURED_PRODUCTS
+  RICH_TEXT
+  IMAGE_TEXT
+  TEXT_IMAGE
+  QUOTE
+  CONTACT_CARD
+  REASSURANCE_BAR
+}
+
+enum CustomizationInputType {
+  SINGLE_SELECT
+  MULTI_SELECT
+  TEXT
+  TEXTAREA
+  BOOLEAN
+  COLOR_SELECT
+  IMAGE_SWATCH
+}
+
+enum EmailType {
+  CUSTOMER_ORDER_CONFIRMED
+  OWNER_ORDER_CONFIRMED
+  CUSTOMER_ORDER_CANCELLED
+  INTERNAL_ORDER_REQUEST
+}
+
+enum EmailStatus {
+  SENT
+  FAILED
+  SKIPPED
+}
+
+model AdminUser {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  nameFr      String
+  nameEn      String
+  descriptorFr String?
+  descriptorEn String?
+  coverImageUrl String?
+  sortOrder   Int      @default(0)
+  isFeatured  Boolean  @default(true)
+  isActive    Boolean  @default(true)
+  products    Product[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Product {
+  id                String           @id @default(cuid())
+  slug              String           @unique
+  categoryId        String
+  category          Category         @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  nameFr            String
+  nameEn            String
+  shortDescriptionFr String?
+  shortDescriptionEn String?
+  descriptionFr     String?
+  descriptionEn     String?
+  basePrice         Decimal          @db.Decimal(10, 2)
+  dimensions        String?
+  materialFr        String?
+  materialEn        String?
+  availabilityType  AvailabilityType @default(MADE_TO_ORDER)
+  stockQuantity     Int?
+  leadTimeMinDays   Int              @default(7)
+  leadTimeMaxDays   Int              @default(14)
+  leadTimeTextFr    String?
+  leadTimeTextEn    String?
+  isFeatured        Boolean          @default(false)
+  isActive          Boolean          @default(true)
+  sortOrder         Int              @default(0)
+  images            ProductImage[]
+  colors            ProductColor[]
+  customizationGroups ProductCustomizationGroup[]
+  orderItems        OrderItem[]
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  altFr     String?
+  altEn     String?
+  sortOrder Int     @default(0)
+  isPrimary Boolean @default(false)
+}
+
+model ProductColor {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  labelFr   String
+  labelEn   String
+  value     String
+  colorHex  String?
+  priceDelta Decimal @default(0) @db.Decimal(10, 2)
+  isAvailable Boolean @default(true)
+  sortOrder Int @default(0)
+  orderItems OrderItem[]
+}
+
+model CustomizationGroup {
+  id        String @id @default(cuid())
+  slug      String @unique
+  labelFr   String
+  labelEn   String
+  helpTextFr String?
+  helpTextEn String?
+  inputType CustomizationInputType
+  isActive  Boolean @default(true)
+  sortOrder Int @default(0)
+  options   CustomizationOption[]
+  products  ProductCustomizationGroup[]
+  orderItemCustomizations OrderItemCustomization[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CustomizationOption {
+  id        String @id @default(cuid())
+  groupId   String
+  group     CustomizationGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  labelFr   String
+  labelEn   String
+  value     String
+  imageUrl  String?
+  colorHex  String?
+  priceDelta Decimal @default(0) @db.Decimal(10, 2)
+  isAvailable Boolean @default(true)
+  sortOrder Int @default(0)
+  orderItemCustomizations OrderItemCustomization[]
+}
+
+model ProductCustomizationGroup {
+  id        String @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  groupId   String
+  group     CustomizationGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  isRequired Boolean @default(false)
+  sortOrder Int @default(0)
+  adminNote String?
+
+  @@unique([productId, groupId])
+}
+
+model Page {
+  id        String @id @default(cuid())
+  slug      String @unique
+  titleFr   String
+  titleEn   String
+  seoTitleFr String?
+  seoTitleEn String?
+  seoDescriptionFr String?
+  seoDescriptionEn String?
+  sections  PageSection[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PageSection {
+  id        String @id @default(cuid())
+  pageId    String
+  page      Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  type      SectionType
+  titleFr   String?
+  titleEn   String?
+  bodyFr    String?
+  bodyEn    String?
+  imageUrl  String?
+  videoUrl  String?
+  ctaLabelFr String?
+  ctaLabelEn String?
+  ctaHrefFr String?
+  ctaHrefEn String?
+  metadata  Json?
+  isVisible Boolean @default(true)
+  sortOrder Int @default(0)
+}
+
+model SiteSetting {
+  id        String @id @default(cuid())
+  key       String @unique
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FAQEntry {
+  id        String @id @default(cuid())
+  questionFr String
+  questionEn String
+  answerFr String
+  answerEn String
+  isVisible Boolean @default(true)
+  sortOrder Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PolicyPage {
+  id        String @id @default(cuid())
+  slugFr    String @unique
+  slugEn    String @unique
+  titleFr   String
+  titleEn   String
+  bodyFr    String
+  bodyEn    String
+  isVisible Boolean @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CustomerSnapshot {
+  id        String @id @default(cuid())
+  firstName String
+  lastName  String
+  email     String
+  phone     String
+  secondPhone String?
+  orders    Order[]
+}
+
+model AddressSnapshot {
+  id        String @id @default(cuid())
+  addressLine String
+  city      String
+  governorate String
+  postalCode String?
+  country   String @default("Tunisia")
+  orders    Order[]
+}
+
+model Order {
+  id        String @id @default(cuid())
+  orderNumber String @unique
+  status    OrderStatus @default(PENDING_CONFIRMATION)
+  customerId String
+  customer CustomerSnapshot @relation(fields: [customerId], references: [id])
+  addressId String
+  address AddressSnapshot @relation(fields: [addressId], references: [id])
+  notes     String?
+  currency  String @default("TND")
+  subtotal  Decimal @db.Decimal(10, 2)
+  shippingFee Decimal @db.Decimal(10, 2)
+  total     Decimal @db.Decimal(10, 2)
+  locale    String @default("fr")
+  items     OrderItem[]
+  emails    EmailLog[]
+  adminNotes String?
+  confirmedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model OrderItem {
+  id        String @id @default(cuid())
+  orderId   String
+  order     Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productColorId String?
+  productColor ProductColor? @relation(fields: [productColorId], references: [id], onDelete: SetNull)
+  productNameFr String
+  productNameEn String
+  colorLabelFr String?
+  colorLabelEn String?
+  unitPrice Decimal @db.Decimal(10, 2)
+  quantity  Int
+  lineTotal Decimal @db.Decimal(10, 2)
+  customizations OrderItemCustomization[]
+}
+
+model OrderItemCustomization {
+  id        String @id @default(cuid())
+  orderItemId String
+  orderItem OrderItem @relation(fields: [orderItemId], references: [id], onDelete: Cascade)
+  groupId   String?
+  group     CustomizationGroup? @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  optionId  String?
+  option    CustomizationOption? @relation(fields: [optionId], references: [id], onDelete: SetNull)
+  groupLabelFr String
+  groupLabelEn String
+  optionLabelFr String?
+  optionLabelEn String?
+  textValue String?
+  booleanValue Boolean?
+  priceDelta Decimal @default(0) @db.Decimal(10, 2)
+}
+
+model EmailLog {
+  id        String @id @default(cuid())
+  orderId   String?
+  order     Order? @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  type      EmailType
+  recipient String
+  subject   String
+  status    EmailStatus
+  providerId String?
+  errorMessage String?
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  locale    String   @default("fr")
+  source    String   @default("footer")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

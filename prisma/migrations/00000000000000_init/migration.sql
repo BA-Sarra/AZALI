@@ -1,0 +1,4 @@
+-- Initial migration placeholder generated for the zip-ready handoff.
+-- Run `npm install`, set DATABASE_URL and DIRECT_URL, then run:
+-- npx prisma migrate dev --name init
+-- Prisma will generate the exact SQL for your Supabase Postgres version from prisma/schema.prisma.

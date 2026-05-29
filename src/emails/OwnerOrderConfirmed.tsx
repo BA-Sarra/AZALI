@@ -1,0 +1,8 @@
+import { Body, Container, Head, Heading, Hr, Html, Preview, Section, Text } from '@react-email/components';
+import { formatTnd } from '@/lib/currency';
+
+export function OwnerOrderConfirmed({ order, adminUrl }: { order: any; adminUrl: string }) {
+  return (
+    <Html><Head /><Preview>New confirmed AZALI order {order.orderNumber}</Preview><Body style={{ backgroundColor: '#F7F1E6', color: '#271912', fontFamily: 'Arial, sans-serif' }}><Container style={{ maxWidth: 680, margin: '0 auto', padding: 32 }}><Section style={{ backgroundColor: '#fffaf2', borderRadius: 24, padding: 28 }}><Heading style={{ fontFamily: 'Georgia, serif' }}>New confirmed order</Heading><Text><strong>Order:</strong> {order.orderNumber}</Text><Text><strong>Customer:</strong> {order.customer.firstName} {order.customer.lastName}</Text><Text><strong>Phone:</strong> {order.customer.phone} {order.customer.secondPhone ? ` / ${order.customer.secondPhone}` : ''}</Text><Text><strong>Email:</strong> {order.customer.email}</Text><Text><strong>Address:</strong> {order.address.addressLine}, {order.address.city}, {order.address.governorate}, {order.address.postalCode}</Text><Text><strong>Notes:</strong> {order.notes || '-'}</Text><Hr />{order.items.map((item: any) => <Text key={item.id}><strong>{item.productNameFr}</strong> × {item.quantity}<br />Color: {item.colorLabelFr || '-'}<br />{item.customizations.map((c: any) => `${c.groupLabelFr}: ${c.textValue || c.optionLabelFr || (c.booleanValue ? 'Yes' : '')}`).join(' · ')}<br />{formatTnd(item.lineTotal)}</Text>)}<Hr /><Heading as="h2">Total: {formatTnd(order.total)}</Heading><Text>Admin: {adminUrl}</Text></Section></Container></Body></Html>
+  );
+}
