@@ -18,6 +18,7 @@ type EthicsContent = {
   cards: EthicsCard[];
   closingTitle: string;
   closing: string;
+  itclosing: string;
   cta: string;
 };
 
@@ -65,6 +66,7 @@ const content: Record<Locale, EthicsContent> = {
     closingTitle: 'Notre position chez AZALI',
     closing:
       'Nous ne surproduisons pas. Nous ne jetons pas ce qui peut encore devenir beau. Nous créons des pièces qui méritent d’être gardées.',
+    itclosing:'Choosing AZALI means taking a step towards a more ethical and sustainable consumerism.',
     cta: 'Trouver votre compagnon',
   },
 
@@ -110,7 +112,8 @@ const content: Record<Locale, EthicsContent> = {
     ],
     closingTitle: 'Our Position as AZALI',
     closing:
-      'We do not overproduce. We do not discard what can still become beautiful. We create pieces that deserve to be kept.',
+      'We do not overproduce. We do not discard what can still become beautiful. We create pieces that last and deserve to be kept.',
+    itclosing:'Choosing AZALI means taking a step towards a more ethical and sustainable consumerism.',
     cta: 'Find your companion',
   },
 };
@@ -178,8 +181,11 @@ export function EthicsPage({ locale }: { locale: Locale }) {
           {page.closingTitle}
         </h2>
 
-        <p className="mx-auto mt-5 max-w-[850px] text-[13px] leading-[24px] text-umber/62 md:text-[14px]">
+        <p className="mx-auto mt-5 max-w-[900px] text-[13px] leading-[24px] text-umber/62 md:text-[14px]">
           {page.closing}
+        </p>
+        <p className="mx-auto max-w-[850px] text-[13px] leading-[24px] font-semibold italic text-umber/62 md:text-[14px] opacity-70">
+          {page.itclosing}
         </p>
 
         <Link href={productsHref(locale)} className="btn-primary mt-8 inline-flex">

@@ -30,7 +30,7 @@ export async function ProductsPage({ locale }: { locale: Locale }) {
       <section className="page-wrap page-pad">
         <p className="origin-label">{locale === 'fr' ? 'Parcourir' : 'Browse'}</p>
         <h1 className="mt-4 max-w-[720px] font-display text-4xl leading-tight text-espresso md:text-5xl">
-          {locale === 'fr' ? 'Choisir par catégorie ou voir chaque pièce.' : 'Choose by category or see every piece.'}
+          {locale === 'fr' ? 'Choisir par catégorie' : 'Choose by category'}
         </h1>
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.7fr_1fr]">
           {mainCategory && <CategoryCard category={mainCategory} locale={locale} featured />}
